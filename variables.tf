@@ -66,9 +66,8 @@ variable "vpc_name" {
 }
 
 variable "vpc_cidr_block" {
-  type        = string
+  type        = map(string)
   description = "Base CIDR block for VPC"
-
 }
 
 variable "vpc_subnet_count" {

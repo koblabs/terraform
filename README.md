@@ -5,6 +5,7 @@
 ### Configurations
 
     terraform fmt
+    terraform init
     terraform validate
 
     # For Linux and MacOS
@@ -15,7 +16,7 @@
     $env:AWS_ACCESS_KEY_ID="YOUR_ACCESS_KEY"
     $env:AWS_SECRET_ACCESS_KEY="YOUR_SECRET_ACCESS_KEY"
 
-### Add Workspace
+### Add workspace
 
     terraform workspace new Development
     terraform workspace list

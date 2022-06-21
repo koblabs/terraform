@@ -1,5 +1,5 @@
 locals {
-  common-tags = {
+  common_tags = {
     terraform    = "true"
     company      = var.company
     billing_code = var.billing_code
