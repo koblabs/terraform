@@ -1,4 +1,9 @@
-### USAGE
+# USAGE
+
+## Setup
+
+### Configurations
+
     terraform fmt
     terraform validate
 
@@ -9,7 +14,9 @@
     # For PowerShell
     $env:AWS_ACCESS_KEY_ID="YOUR_ACCESS_KEY"
     $env:AWS_SECRET_ACCESS_KEY="YOUR_SECRET_ACCESS_KEY"
-    
+
+### Add Workspace
+
     terraform workspace new Development
     terraform workspace list
 
@@ -17,9 +24,11 @@
     terraform apply dev.tfplan
 
 ### Destroy workspace
+
     terraform workspace select Development
     terraform destroy -auto-approve
 
 ### Delete workspace
+
     terraform workspace show
     terraform workspace delete Development
