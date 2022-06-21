@@ -71,13 +71,27 @@ variable "vpc_cidr_block" {
 }
 
 variable "vpc_subnet_count" {
-  type        = number
+  type        = map(number)
   description = "Number of subnets in VPC"
-  default     = 2
 }
 
 variable "map_public_ip_on_launch" {
   type        = bool
   description = "Assign public IPV4 to subnet instances"
   default     = true
+}
+
+
+################################
+# Instance setup
+################################
+
+variable "instance_count" {
+  type        = map(number)
+  description = "Number of EC2 instances to create in VPC"
+}
+
+variable "instance_type" {
+  type        = map(string)
+  description = "EC2 instance type"
 }

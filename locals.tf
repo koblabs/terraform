@@ -8,4 +8,10 @@ locals {
   }
 
   name_tag = "${var.naming_prefix}-${terraform.workspace}"
+
+  vpc_cidr_block   = var.vpc_cidr_block[terraform.workspace]
+  vpc_subnet_count = var.vpc_subnet_count[terraform.workspace]
+
+  instance_type  = var.instance_type[terraform.workspace]
+  instance_count = var.instance_count[terraform.workspace]
 }
