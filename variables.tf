@@ -36,6 +36,12 @@ variable "aws_region" {
   default     = "ca-central-1"
 }
 
+variable "aws_profile" {
+  type        = string
+  description = "AWS profile for credentials"
+  default     = "terraform"
+}
+
 
 ################################
 # VPC setup
