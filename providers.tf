@@ -9,6 +9,10 @@ terraform {
       version = "~> 4.19.0"
     }
   }
+
+  backend "consul" {
+    
+  }
 }
 
 
@@ -18,5 +22,6 @@ terraform {
 
 provider "aws" {
   # Configuration options
-  region = var.aws_region
+  profile = var.aws_profile
+  region  = var.aws_region
 }
