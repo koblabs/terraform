@@ -10,3 +10,7 @@
 *.tfvars
 *.tfvars.json
 *.tfplan
+
+
+#vs code folder
+.vscode/
