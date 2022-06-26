@@ -6,12 +6,12 @@ module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = var.vpc_name
-  cidr = local.vpc_cidr_block
+  cidr = var.vpc_cidr_block
 
-  azs = slice(data.aws_availability_zones.available.names, 0, local.vpc_subnet_count)
+  azs = slice(data.aws_availability_zones.available.names, 0, var.vpc_subnet_count)
 
   # private_subnets = []
-  public_subnets = [for s in range(local.vpc_subnet_count) : cidrsubnet(local.vpc_cidr_block, 8, s)]
+  public_subnets = [for s in range(var.vpc_subnet_count) : cidrsubnet(var.vpc_cidr_block, 8, s)]
 
   enable_nat_gateway      = var.enable_nat_gateway
   enable_vpn_gateway      = var.enable_vpn_gateway
@@ -66,7 +66,7 @@ resource "aws_security_group" "servers_sg" {
   vpc_id      = module.vpc.vpc_id
 
   ingress = [{
-    cidr_blocks      = [local.vpc_cidr_block]
+    cidr_blocks      = [var.vpc_cidr_block]
     description      = "Allow incoming HTTP traffic from specified cidr blocks"
     from_port        = 80
     ipv6_cidr_blocks = []
