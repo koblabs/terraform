@@ -95,12 +95,12 @@ variable "vpc_name" {
 }
 
 variable "vpc_cidr_block" {
-  type        = map(string)
+  type        = string
   description = "Base CIDR block for VPC"
 }
 
 variable "vpc_subnet_count" {
-  type        = map(number)
+  type        = number
   description = "Number of subnets in VPC"
 }
 
@@ -116,11 +116,11 @@ variable "map_public_ip_on_launch" {
 ################################
 
 variable "instance_count" {
-  type        = map(number)
+  type        = number
   description = "Number of EC2 instances to create in VPC"
 }
 
 variable "instance_type" {
-  type        = map(string)
+  type        = string
   description = "EC2 instance type"
 }
