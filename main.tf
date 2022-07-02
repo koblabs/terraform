@@ -69,3 +69,21 @@ resource "aws_lb_target_group_attachment" "nginx" {
   target_id        = aws_instance.server[count.index].id
   port             = 80
 }
+
+
+################################
+# S3 Bucket
+################################
+
+module "s3_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = join("-", ["koblabs", uuid()])
+  acl    = "private"
+
+  versioning = {
+    enabled = true
+  }
+
+  tags = local.common_tags
+}
