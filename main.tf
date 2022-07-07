@@ -16,9 +16,22 @@ resource "aws_instance" "public_server" {
   # })
 
   tags = merge(local.common_tags, {
-    Name = "${local.name_tag}-server-${count.index}"
+    Name = "${local.name_tag}-server-${count.index}-public"
   })
 }
+
+
+# resource "aws_instance" "private_server" {
+#   count                  = var.instance_count
+#   ami                    = data.aws_ami.ami.id
+#   instance_type          = var.instance_type
+#   subnet_id              = module.vpc.private_subnets[(count.index % var.vpc_private_subnet_count)]
+#   vpc_security_group_ids = [aws_security_group.servers_sg.id]
+
+#   tags = merge(local.common_tags, {
+#     Name = "${local.name_tag}-server-${count.index}-private"
+#   })
+# }
 
 
 ################################
