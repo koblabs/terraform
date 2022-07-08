@@ -2,7 +2,7 @@
 # Instances
 ################################
 
-resource "aws_instance" "public_server" {
+resource "aws_instance" "server" {
   count                  = var.instance_count
   ami                    = data.aws_ami.ami.id
   instance_type          = var.instance_type
@@ -16,22 +16,9 @@ resource "aws_instance" "public_server" {
   # })
 
   tags = merge(local.common_tags, {
-    Name = "${local.name_tag}-server-${count.index}-public"
+    Name = "${local.name_tag}-server-${count.index}"
   })
 }
-
-
-# resource "aws_instance" "private_server" {
-#   count                  = var.instance_count
-#   ami                    = data.aws_ami.ami.id
-#   instance_type          = var.instance_type
-#   subnet_id              = module.vpc.private_subnets[(count.index % var.vpc_private_subnet_count)]
-#   vpc_security_group_ids = [aws_security_group.servers_sg.id]
-
-#   tags = merge(local.common_tags, {
-#     Name = "${local.name_tag}-server-${count.index}-private"
-#   })
-# }
 
 
 ################################
@@ -79,7 +66,7 @@ resource "aws_lb_listener" "nginx" {
 resource "aws_lb_target_group_attachment" "nginx" {
   count            = var.instance_count
   target_group_arn = aws_lb_target_group.nginx.arn
-  target_id        = aws_instance.public_server[count.index].id
+  target_id        = aws_instance.server[count.index].id
   port             = 80
 }
 
