@@ -11,7 +11,7 @@ output "vpc_arn" {
 }
 
 output "public_ip" {
-  value = aws_instance.public_server[*].public_ip
+  value = aws_instance.server[*].public_ip
 }
 
 output "s3_bucket_arn" {
