@@ -8,8 +8,3 @@ provider "aws" {
   # profile = var.aws_profile
   # region  = var.aws_region
 }
-
-provider "consul" {
-  address    = "${var.consul_address}:${var.consul_port}"
-  datacenter = var.consul_datacenter
-}
