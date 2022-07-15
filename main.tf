@@ -6,7 +6,7 @@ resource "aws_instance" "server" {
   count                  = var.instance_count
   ami                    = data.aws_ami.ami.id
   instance_type          = var.instance_type
-  subnet_id              = module.vpc.public_subnets[(count.index % var.vpc_public_subnet_count)]
+  subnet_id              = module.vpc.private_subnets[(count.index % var.vpc_public_subnet_count)]
   vpc_security_group_ids = [aws_security_group.servers_sg.id]
   # iam_instance_profile   = module.web_app_s3.instance_profile.name
   # depends_on             = [module.web_app_s3]
