@@ -4,8 +4,8 @@
 
 terraform {
 
-  # backend "local" {}
+  backend "local" {}
 
-  backend "consul" {}
-  
+  # backend "consul" {}
+
 }
