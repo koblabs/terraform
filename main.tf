@@ -22,6 +22,26 @@ resource "aws_instance" "server" {
 
 
 ################################
+# S3 Bucket
+################################
+
+module "s3_bucket_for_logs" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = join("-", ["koblabs", uuid()])
+  acl    = "log-delivery-write"
+
+  versioning = {
+    enabled = true
+  }
+
+  force_destroy = true
+
+  attach_elb_log_delivery_policy = true
+}
+
+
+################################
 # Load balancer
 ################################
 
@@ -34,11 +54,11 @@ resource "aws_lb" "nginx" {
 
   enable_deletion_protection = false
 
-  # access_logs {
-  #   bucket  = module.s3_buckets.web_bucket.id
-  #   prefix  = "alb-logs"
-  #   enabled = true
-  # }
+  access_logs {
+    bucket  = module.s3_bucket_for_logs.s3_bucket_id
+    prefix  = "alb-logs"
+    enabled = true
+  }
 
   tags = local.common_tags
 }
@@ -68,22 +88,4 @@ resource "aws_lb_target_group_attachment" "nginx" {
   target_group_arn = aws_lb_target_group.nginx.arn
   target_id        = aws_instance.server[count.index].id
   port             = 80
-}
-
-
-################################
-# S3 Bucket
-################################
-
-module "s3_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
-
-  bucket = join("-", ["koblabs", uuid()])
-  acl    = "private"
-
-  versioning = {
-    enabled = true
-  }
-
-  tags = local.common_tags
 }
