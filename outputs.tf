@@ -15,5 +15,5 @@ output "public_ip" {
 }
 
 output "s3_bucket_arn" {
-  value = module.s3_bucket.s3_bucket_arn
+  value = module.s3_bucket_for_logs.s3_bucket_arn
 }
