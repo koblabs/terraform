@@ -10,7 +10,7 @@ output "vpc_arn" {
   value = module.vpc.vpc_arn
 }
 
-output "public_ip" {
+output "private_ip" {
   value = aws_instance.server[*].private_ip
 }
 
