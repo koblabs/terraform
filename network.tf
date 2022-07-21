@@ -70,6 +70,20 @@ resource "aws_subnet" "private" {
   }
 }
 
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "${local.name_tag}-private-rt"
+  }
+}
+
+resource "aws_route_table_association" "private" {
+  count          = var.vpc_public_subnet_count
+  subnet_id      = element(aws_subnet.private.*.id, count.index)
+  route_table_id = aws_route_table.private.id
+}
+
 ################################
 # Security groups
 ################################
