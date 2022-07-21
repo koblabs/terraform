@@ -2,30 +2,6 @@
 # VPC Setup
 ################################
 
-# module "vpc" {
-#   source = "terraform-aws-modules/vpc/aws"
-
-#   name = var.vpc_name
-#   cidr = var.vpc_cidr_block
-
-#   azs = slice(data.aws_availability_zones.available.names, 0, max(var.vpc_public_subnet_count, var.vpc_private_subnet_count))
-
-#   public_subnets  = [for s in range(var.vpc_public_subnet_count) : cidrsubnet(var.vpc_cidr_block, 8, s)]
-#   private_subnets = [for s in range(var.vpc_private_subnet_count) : cidrsubnet(var.vpc_cidr_block, 8, s + var.vpc_public_subnet_count)]
-
-#   enable_nat_gateway      = var.enable_nat_gateway
-#   enable_vpn_gateway      = var.enable_vpn_gateway
-#   enable_dns_hostnames    = var.enable_dns_hostnames
-#   map_public_ip_on_launch = var.map_public_ip_on_launch
-
-#   default_route_table_name = "main-rt"
-
-#   tags = merge(local.common_tags, {
-#     Name = "${local.name_tag}-vpc"
-#   })
-# }
-
-
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr_block
 
@@ -47,7 +23,7 @@ resource "aws_internet_gateway" "main" {
 
 resource "aws_subnet" "public" {
   count      = var.vpc_public_subnet_count
-  cidr_block =  cidrsubnet(var.vpc_cidr_block, 8, count.index)
+  cidr_block = cidrsubnet(var.vpc_cidr_block, 8, count.index)
 
   vpc_id = aws_vpc.main.id
 
@@ -65,6 +41,19 @@ resource "aws_default_route_table" "main" {
   tags = {
     Name = "${local.name_tag}-main-rt"
   }
+}
+
+resource "aws_route" "public" {
+  count                  = var.vpc_public_subnet_count
+  route_table_id         = aws_default_route_table.main.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.main.id
+}
+
+resource "aws_route_table_association" "public" {
+  count          = var.vpc_public_subnet_count
+  subnet_id      = element(aws_subnet.public.*.id, count.index)
+  route_table_id = aws_default_route_table.main.id
 }
 
 
