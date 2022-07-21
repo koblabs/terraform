@@ -70,16 +70,10 @@ variable "consul_datacenter" {
 # VPC setup
 ################################
 
-variable "enable_nat_gateway" {
+variable "enable_dns_support" {
   type        = bool
-  description = "Enable NAT gateway in VPC"
-  default     = false
-}
-
-variable "enable_vpn_gateway" {
-  type        = bool
-  description = "Enable VPN gateway in VPC"
-  default     = false
+  description = "Enable DNS support in VPC"
+  default     = true
 }
 
 variable "enable_dns_hostnames" {
