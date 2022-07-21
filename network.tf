@@ -56,6 +56,19 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_default_route_table.main.id
 }
 
+resource "aws_subnet" "private" {
+  count      = var.vpc_public_subnet_count
+  cidr_block = cidrsubnet(var.vpc_cidr_block, 8, count.index + var.vpc_public_subnet_count)
+
+  vpc_id = aws_vpc.main.id
+
+  map_public_ip_on_launch = true
+  availability_zone       = element(data.aws_availability_zones.available.names, count.index)
+
+  tags = {
+    Name = "${local.name_tag}-private-${count.index}"
+  }
+}
 
 ################################
 # Security groups
