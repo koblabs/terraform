@@ -88,70 +88,75 @@ resource "aws_route_table_association" "private" {
 # Security groups
 ################################
 
-# resource "aws_security_group" "alb_sg" {
-#   name        = "${local.name_tag}-alb-sg"
-#   description = "Security group settings for ALB"
-#   vpc_id      = module.vpc.vpc_id
+resource "aws_security_group" "alb_sg" {
+  name        = "${local.name_tag}-alb-sg"
+  description = "Security group settings for ALB"
 
-#   ingress = [{
-#     cidr_blocks      = ["0.0.0.0/0"]
-#     description      = "Allow incoming HTTP traffic from anywhere"
-#     from_port        = 80
-#     ipv6_cidr_blocks = ["::/0"]
-#     prefix_list_ids  = []
-#     protocol         = "tcp"
-#     security_groups  = []
-#     self             = true
-#     to_port          = 80
-#   }]
+  vpc_id = aws_vpc.main.id
 
-#   egress = [{
-#     cidr_blocks      = ["0.0.0.0/0"]
-#     description      = "Allow all outbound traffic"
-#     from_port        = 0
-#     ipv6_cidr_blocks = ["::/0"]
-#     prefix_list_ids  = []
-#     protocol         = "-1"
-#     security_groups  = []
-#     self             = true
-#     to_port          = 0
-#   }]
+  ingress = [{
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "Allow incoming HTTP traffic from anywhere"
+    from_port        = 80
+    ipv6_cidr_blocks = ["::/0"]
+    prefix_list_ids  = []
+    protocol         = "tcp"
+    security_groups  = []
+    self             = true
+    to_port          = 80
+  }]
 
-#   tags = local.common_tags
-# }
+  egress = [{
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "Allow all outbound traffic"
+    from_port        = 0
+    ipv6_cidr_blocks = ["::/0"]
+    prefix_list_ids  = []
+    protocol         = "-1"
+    security_groups  = []
+    self             = true
+    to_port          = 0
+  }]
 
-# resource "aws_security_group" "servers_sg" {
-#   name        = "${local.name_tag}-servers-sg"
-#   description = "Security group settings for all servers"
-#   vpc_id      = module.vpc.vpc_id
+  tags = merge(local.common_tags, {
+    Name = "${local.name_tag}-alb-sg"
+  })
+}
 
+resource "aws_security_group" "servers_sg" {
+  name        = "${local.name_tag}-servers-sg"
+  description = "Security group settings for all servers"
 
-#   dynamic "ingress" {
-#     for_each = local.ingress
-#     content {
-#       cidr_blocks      = ingress.value.cidr_blocks
-#       description      = ingress.value.description
-#       from_port        = ingress.value.port
-#       ipv6_cidr_blocks = []
-#       prefix_list_ids  = []
-#       protocol         = ingress.value.protocol
-#       security_groups  = []
-#       self             = true
-#       to_port          = ingress.value.port
-#     }
-#   }
+  vpc_id = aws_vpc.main.id
 
-#   egress = [{
-#     cidr_blocks      = ["0.0.0.0/0"]
-#     description      = "Allow all outbound traffic"
-#     from_port        = 0
-#     ipv6_cidr_blocks = ["::/0"]
-#     prefix_list_ids  = []
-#     protocol         = "-1"
-#     security_groups  = []
-#     self             = true
-#     to_port          = 0
-#   }]
+  dynamic "ingress" {
+    for_each = local.ingress
+    content {
+      cidr_blocks      = ingress.value.cidr_blocks
+      description      = ingress.value.description
+      from_port        = ingress.value.port
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = ingress.value.protocol
+      security_groups  = []
+      self             = true
+      to_port          = ingress.value.port
+    }
+  }
 
-#   tags = local.common_tags
-# }
+  egress = [{
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "Allow all outbound traffic"
+    from_port        = 0
+    ipv6_cidr_blocks = ["::/0"]
+    prefix_list_ids  = []
+    protocol         = "-1"
+    security_groups  = []
+    self             = true
+    to_port          = 0
+  }]
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_tag}-servers-sg"
+  })
+}
