@@ -89,9 +89,9 @@ resource "aws_lb_listener" "nginx" {
   tags = local.common_tags
 }
 
-# resource "aws_lb_target_group_attachment" "nginx" {
-#   count            = var.instance_count
-#   target_group_arn = aws_lb_target_group.nginx.arn
-#   target_id        = aws_instance.server[count.index].id
-#   port             = 80
-# }
+resource "aws_lb_target_group_attachment" "nginx" {
+  count            = var.instance_count
+  target_group_arn = aws_lb_target_group.nginx.arn
+  target_id        = aws_instance.server[count.index].id
+  port             = 80
+}
