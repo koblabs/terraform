@@ -11,7 +11,7 @@ output "vpc_arn" {
 }
 
 output "private_ip" {
-  value = aws_subnet.private.*.private_ip
+  value = aws_instance.server.*.private_ip
 }
 
 output "s3_bucket_arn" {
