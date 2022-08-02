@@ -86,6 +86,73 @@ resource "aws_route_table_association" "private" {
 
 
 ################################
+# Network ACLs
+################################
+
+resource "aws_network_acl" "public" {
+  vpc_id     = aws_vpc.main.id
+  subnet_ids = aws_subnet.public.*.id
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_tag}-public-nacl"
+  })
+}
+
+resource "aws_network_acl" "private" {
+  vpc_id     = aws_vpc.main.id
+  subnet_ids = aws_subnet.private.*.id
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_tag}-private-nacl"
+  })
+}
+
+resource "aws_network_acl_rule" "public_nacl_ingress_1" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 200
+  egress         = false
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 0
+  to_port        = 0
+}
+
+resource "aws_network_acl_rule" "public_nacl_egress_1" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 200
+  egress         = true
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 0
+  to_port        = 0
+}
+
+resource "aws_network_acl_rule" "private_nacl_ingress_1" {
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 200
+  egress         = false
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 0
+  to_port        = 0
+}
+
+resource "aws_network_acl_rule" "private_nacl_egress_1" {
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 200
+  egress         = true
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 0
+  to_port        = 0
+}
+
+
+################################
 # Security groups
 ################################
 
